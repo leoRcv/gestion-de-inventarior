@@ -9,9 +9,8 @@ router = APIRouter(prefix="/ventas", tags=["Ventas"])
 
 @router.post("/", response_model=schemas.Venta)
 def crear_venta(venta: schemas.VentaCreate, db: Session = Depends(get_db)):
+    # realizar_venta lanzará un HTTPException si no hay stock
     resultado = venta_repo.realizar_venta(db, venta)
-    if not resultado:
-        raise HTTPException(status_code=400, detail="No hay suficiente stock para este producto electrónico")
     return resultado
 
 # Añade esto a routers/venta_router.py

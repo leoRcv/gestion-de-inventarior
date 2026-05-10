@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from database import engine
 from models import models  # Importas tus modelos para crear las tablas
-from routers import categoria_router , producto_router, venta_router    # Importas el router que creamos
+from routers import categoria_router , producto_router, venta_router, movimiento_router    # Importas el router que creamos
 
 # 1. ORDEN DE CONSTRUCCIÓN: 
 # Al arrancar, crea las tablas en PostgreSQL basado en tus modelos
@@ -20,6 +20,8 @@ app = FastAPI(
 app.include_router(categoria_router.router)
 app.include_router(producto_router.router)
 app.include_router(venta_router.router) 
+app.include_router(movimiento_router.router)
+
 # 4. RUTA DE BIENVENIDA (Opcional):
 @app.get("/")
 def inicio():

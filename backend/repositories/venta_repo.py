@@ -17,14 +17,15 @@ def realizar_venta(db: Session, venta_in: schemas.VentaCreate):
         
         # Validar que el producto exista
         if not producto:
-            # Si no existe, podemos retornar o levantar excepción. (Para simplicidad, omitiremos detalle o puedes lanzar HTTPException si quieres en router nivel)
-            continue
+            from fastapi import HTTPException
+            raise HTTPException(status_code=404, detail=f"Producto con ID {item.producto_id} no existe.")
 
-        # Validar Stock
+        # Validar Stock: Escudo anti stock negativo
         if producto.stock_actual < item.cantidad:
             # Revertir la operación
             db.rollback()
-            return None
+            from fastapi import HTTPException
+            raise HTTPException(status_code=400, detail=f"Stock insuficiente para vender {item.cantidad} unidades de '{producto.nombre}'. Solo quedan {producto.stock_actual}.")
 
         # Calcular subtotal
         subtotal = producto.precio_venta * item.cantidad
