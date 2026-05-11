@@ -95,8 +95,43 @@ class Venta(BaseModel):
 
 
 # ==========================================
+# --- SCHEMAS PARA USUARIOS ---
+# ==========================================
+
+class UsuarioBase(BaseModel):
+    nombre: str
+    email: str
+    rol: str = "vendedor" # Puede ser "admin" o "vendedor"
+
+class UsuarioCreate(UsuarioBase):
+    password: str
+
+class UsuarioResponse(UsuarioBase):
+    id: int
+    is_active: bool
+
+    class Config:
+        from_attributes = True
+
+# ==========================================
+# --- SCHEMAS PARA LA AUTENTICACIÓN (LOGIN) ---
+# ==========================================
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    email: Optional[str] = None
+
+# ==========================================
 # --- SCHEMAS PARA REPORTES ---
 # ==========================================
+
+class CierreCaja(BaseModel):
+    fecha: str
+    ventas_totales: int
+    total_recaudado: float
 
 class ReporteStock(BaseModel):
     nombre: str

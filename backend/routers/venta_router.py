@@ -13,8 +13,6 @@ def crear_venta(venta: schemas.VentaCreate, db: Session = Depends(get_db)):
     resultado = venta_repo.realizar_venta(db, venta)
     return resultado
 
-# Añade esto a routers/venta_router.py
-
 @router.get("/", response_model=list[schemas.Venta])
 def obtener_historial_ventas(db: Session = Depends(get_db)):
     return db.query(models.Venta).all()

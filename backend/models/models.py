@@ -1,7 +1,17 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey,DateTime
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from database import Base
 from sqlalchemy.sql import func
+
+class Usuario(Base):
+    __tablename__ = "usuarios"
+
+    id = Column(Integer, primary_key=True, index=True)
+    nombre = Column(String, index=True)
+    email = Column(String, unique=True, index=True)
+    hashed_password = Column(String)
+    rol = Column(String, default="vendedor")
+    is_active = Column(Boolean, default=True)
 
 class Categoria(Base):
     __tablename__ = "categorias"
