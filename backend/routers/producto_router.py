@@ -61,3 +61,16 @@ def buscar_nombre(nombre: str, db: Session = Depends(get_db)):
 @router.get("/{producto_id}/movimientos", response_model=list[schemas.Movimiento])
 def ver_historial(producto_id: int, db: Session = Depends(get_db)):
     return producto_repo.obtener_historial_movimientos(db, producto_id)
+
+@router.get("/", response_model=list[schemas.Producto])
+def listar_todos(db: Session = Depends(get_db)):
+    # Usamos el repositorio para traer absolutamente todos los productos
+    return producto_repo.obtener_todos(db) 
+    # Nota: Asegúrate de que 'obtener_todos_los_productos' o similar exista en tu 'producto_repo'
+
+@router.post("/{producto_id}/ajustar")
+def ajustar_stock(producto_id: int, ajuste: schemas.AjusteStock, db: Session = Depends(get_db)):
+    producto = producto_repo.ajustar_stock_manual(db, producto_id=producto_id, ajuste=ajuste)
+    if not producto:
+        raise HTTPException(status_code=404, detail="Producto no encontrado")
+    return producto

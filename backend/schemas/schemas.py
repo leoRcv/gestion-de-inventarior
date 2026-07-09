@@ -29,6 +29,12 @@ class ProductoBase(BaseModel):
     precio_venta: float
     stock_actual: int
     categoria_id: int
+    activo: bool = True
+    
+class AjusteStock(BaseModel):
+    tipo: str  # "ENTRADA" o "SALIDA"
+    cantidad: int
+    motivo: str
 
 class ProductoCreate(ProductoBase):
     pass

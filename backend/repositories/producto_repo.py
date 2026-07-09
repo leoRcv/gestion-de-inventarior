@@ -29,7 +29,7 @@ def obtener_por_codigo(db: Session, codigo: str):
     return db.query(models.Producto).filter(models.Producto.codigo_barras == codigo).first()
 
 def obtener_todos(db: Session):
-    return db.query(models.Producto).all()
+    return db.query(models.Producto).filter(models.Producto.activo == True).all()
 
 def obtener_stock_bajo(db: Session, limite: int = 5):
     # Buscamos productos donde el stock sea menor al límite
@@ -48,11 +48,41 @@ def actualizar_producto(db: Session, producto_id: int, datos_nuevos: schemas.Pro
 def eliminar_producto(db: Session, producto_id: int):
     db_producto = db.query(models.Producto).filter(models.Producto.id == producto_id).first()
     if db_producto:
-        db.delete(db_producto)
-        db.commit()
-        return True
+        try:
+            db_producto.activo = False
+            db.commit()
+            return True
+        except Exception as e:
+            db.rollback()
+            raise e
     return False
 
 def buscar_productos_por_nombre(db: Session, nombre: str):
     # La lógica es: filtra productos donde el nombre se parezca a lo que escribió el usuario
     return db.query(models.Producto).filter(models.Producto.nombre.ilike(f"%{nombre}%")).all()
+
+def ajustar_stock_manual(db: Session, producto_id: int, ajuste: schemas.AjusteStock):
+    db_producto = db.query(models.Producto).filter(models.Producto.id == producto_id).first()
+    if not db_producto:
+        return None
+        
+    # Modificamos el stock según el tipo de movimiento
+    if ajuste.tipo == "ENTRADA":
+        db_producto.stock_actual += ajuste.cantidad
+    elif ajuste.tipo == "SALIDA":
+        db_producto.stock_actual -= ajuste.cantidad
+
+    db.commit()
+
+    # Registramos el movimiento en el historial
+    nuevo_movimiento = models.Movimiento(
+        producto_id=db_producto.id,
+        tipo=ajuste.tipo,
+        cantidad=ajuste.cantidad,
+        motivo=ajuste.motivo
+    )
+    db.add(nuevo_movimiento)
+    db.commit()
+    db.refresh(db_producto)
+    
+    return db_producto

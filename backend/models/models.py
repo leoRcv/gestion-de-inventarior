@@ -36,6 +36,7 @@ class Producto(Base):
     
     # Esto nos permite acceder a la info de la categoría desde el producto
     categoria = relationship("Categoria", back_populates="productos")
+    activo = Column(Boolean, default=True)
 
 class Venta(Base):
     __tablename__ = "ventas"
