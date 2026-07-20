@@ -1,0 +1,55 @@
+📂 models/ (El Corazón - Base de Datos)
+Función: Aquí defines cómo se ven tus tablas en PostgreSQL.
+
+Lógica: Es la representación física de los datos. Si quieres que un producto tenga "color", lo agregas aquí. Es el único lugar donde se habla el lenguaje de la base de datos (SQLAlchemy).
+
+Analogía: Son los planos de construcción de tu edificio.
+
+📂 schemas/ (El Filtro - Validación)
+Función: Define qué datos permites que entren y salgan de tu API (Pydantic).
+
+Lógica: Es un guardaespaldas. Si alguien intenta enviar un precio que es "texto" en lugar de "número", 
+el Schema lo detiene antes de que llegue a la base de datos.
+
+Analogía: Es el formulario que llenas en una oficina; si dejas campos vacíos o mal escritos, no te lo aceptan.
+
+📂 repositories/ (El Operador - Acciones)
+Función: Contiene la lógica de las operaciones (Crear, Leer, Actualizar, Borrar).
+
+Lógica: Aquí es donde ocurre la "magia" del negocio. Por ejemplo: la lógica de "si vendo esto, resta 1 al stock" vive aquí. El Repositorio toma las órdenes del Router y las ejecuta en el Modelo.
+
+Analogía: Es el cocinero que recibe el pedido y sabe exactamente qué ollas mover para preparar el plato.
+
+📂 routers/ (El Recepcionista - URLs)
+Función: Define las rutas o direcciones (URLs) que usas en Postman.
+
+Lógica: Su único trabajo es recibir la petición del cliente, verificar que el usuario tenga acceso y pasarle la orden al Repositorio. No sabe cómo se guarda en la base de datos, solo sabe a quién llamar.
+
+Analogía: Es el mesero que anota tu pedido y te trae la comida, pero él no cocina.
+
+El Flujo de una Petición (Lógica de camino)
+Cuando tú haces un POST en Postman:
+
+Llega al Router (La puerta).
+
+El Schema revisa que el JSON sea correcto (El guardia).
+
+El Repository recibe los datos y hace los cálculos (El proceso).
+
+El Model guarda la información en los discos de PostgreSQL (El archivo).
+
+Archivos sueltos:
+database.py: Configura la conexión (usuario, contraseña y dirección) con PostgreSQL.
+
+main.py: Es el motor que enciende todo. Une todos los routers y le dice a FastAPI: "¡Arranca!".
+
+¿Te queda más clara la jerarquía ahora o hay alguna carpeta que todavía te genere dudas?
+
+
+#activar el entorno virtual .\venv\Scripts\Activate.ps1
+
+#activar el programa uvicorn main:app --reload
+
+#para general una clave secreta python -c "import secrets; print(secrets.token_hex(32))"
+
+intalar fastapi pip install "fastapi[standard]"
