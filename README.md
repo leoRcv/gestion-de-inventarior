@@ -82,6 +82,16 @@ uvicorn main:app --reload
 
 Al iniciar, la app crea automáticamente las tablas definidas en los modelos.
 
+Si tienes Docker instalado, no necesitas configurar el entorno virtual ni instalar dependencias manualmente. 
+
+1. Construye la imagen (solo la primera vez o cuando haya cambios en el código):
+   ```bash
+   docker build -t pos-backend .
+
+   docker run -d -p 8000:8000 --name pos-backend-container pos-backend
+
+
+
 ## Módulos principales
 
 - `main.py`: crea la app FastAPI, configura CORS e incluye todos los routers.
